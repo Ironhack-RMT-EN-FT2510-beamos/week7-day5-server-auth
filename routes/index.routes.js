@@ -5,4 +5,23 @@ router.get("/", (req, res, next) => {
   res.json("All good in here");
 });
 
+const authRouter = require("./auth.routes")
+router.use("/auth", authRouter)
+
+
+// EXAMPLE OF A PRIVATE ROUTE
+
+const verifyToken = require("../middlewares/auth.middlewares")
+
+router.get("/example-private-route", verifyToken, (req, res) => {
+
+  //! VERY IMPORTANT!
+  console.log("here is the user requesting things", req.payload)
+
+  // res.send("example of private data. Here have some private potatoes!")
+  res.send("example of sending private information from your profile")
+
+})
+
+
 module.exports = router;
