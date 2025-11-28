@@ -4,7 +4,7 @@ const router = require("express").Router();
 
 const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken");
-const verifyToken = require("../middlewares/auth.middlewares");
+const { verifyToken } = require("../middlewares/auth.middlewares");
 
 // POST "/api/auth/signup" => creates the document of the user
 router.post("/signup", async (req, res, next) => {
@@ -31,7 +31,7 @@ router.post("/signup", async (req, res, next) => {
   // - set max length and min length of username or email
   
   try {
-    // 3. The email should be unique. // TODO
+    // 3. The email should be unique.
     const foundUser = await User.findOne({email: email})
     // response could be null if there is no other user with that email
     // response could be a user object f there is a user with that email
@@ -89,6 +89,7 @@ router.post("/login", async (req, res, next) => {
     const payload = {
       _id: foundUser._id,
       email: foundUser.email,
+      role: foundUser.role
     }
 
     const authToken = jwt.sign(payload, process.env.TOKEN_SECRET, {

@@ -13,6 +13,7 @@ function verifyToken(req, res, next) {
     // .verify check is the token exists, if the token is valid, and if the token has not been tampered with.
     
     // I am passing the extracted payload info (the user making the request) to the route
+    console.log(payload)
     req.payload = payload 
 
     next() // continue to the route, meaning that the token was valid
@@ -25,4 +26,17 @@ function verifyToken(req, res, next) {
 
 }
 
-module.exports = verifyToken
+function verifyAdminRole(req, res, next) {
+  // always after verifyToken
+  if (req.payload.role === "admin") {
+    next() // you are an admin so you can continue with the route
+  } else {
+    res.status(401).json({errorMessage: "You are not an admin, get out of here you hacker"})
+  }
+
+}
+
+module.exports = {
+  verifyToken,
+  verifyAdminRole
+}
